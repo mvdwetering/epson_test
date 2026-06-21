@@ -70,7 +70,7 @@ asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 
 [tool.ruff]
-src = ["custom_components/epson", "tests"]
+src = ["custom_components/epson"]
 
 # Most ignores are taken from Home Assistant configuration
 [tool.ruff.lint]
@@ -121,7 +121,7 @@ voluptuous = "vol"
 
 [tool.ruff.lint.isort]
 force-sort-within-sections = true
-known-first-party = ["custom_components", "epson_test"]
+known-first-party = ["custom_components", "epson-projector"]
 known-third-party = ["homeassistant"]
 combine-as-imports = true
 
