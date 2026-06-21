@@ -24,6 +24,8 @@
         "connection_type": {
             "options": {
                 "http": "HTTP",
+                "http_emulator": "HTTP emulator on port 8080",
+                "tcp": "ESC/VP.net",
                 "serial": "Serial"
             }
         }

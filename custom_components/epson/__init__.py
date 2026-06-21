@@ -15,7 +15,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 
-from .const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
+from .const import CONF_CONNECTION_TYPE, DOMAIN, HTTP, HTTP_EMULATOR
 from .exceptions import CannotConnect, PoweredOff
 from .services import async_setup_services
 
@@ -35,11 +35,18 @@ async def validate_projector(
     check_powered_on: bool = True,
 ):
     """Validate the given projector host allows us to connect."""
+    temp_conn_type = conn_type
+    if conn_type == HTTP_EMULATOR:
+        temp_conn_type = HTTP
     epson_proj = Projector(
         host=host,
         websession=async_get_clientsession(hass, verify_ssl=False),
-        type=conn_type,
+        type=temp_conn_type,
     )
+    if conn_type == HTTP_EMULATOR:
+        _LOGGER.debug("Using HTTP emulator on port 8080")
+        epson_proj._projector._http_url = epson_proj._projector._http_url.replace(":80/", ":8080/")
+
     if check_power:
         _power = await epson_proj.get_power()
         if not _power or _power == EPSON_STATE_UNAVAILABLE:
