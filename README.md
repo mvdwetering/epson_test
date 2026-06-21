@@ -1,0 +1,42 @@
+# EPSON Projector test
+
+Minimum required Home Assistant version is: 2026.6.0
+
+## About
+
+This is a custom integration that _overrides_ the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It't main purpose is to test out changes/concepts for the underlying epson-projector library.
+
+DO NOT USE THIS FOR A PRODUCTION SYSTEM!
+
+## Downloading
+
+### Home Assistant Community Store (HACS)
+
+> HACS is a third-party downloader for Home Assistant to easily install and update custom integrations made by the community. See <https://hacs.xyz/> for more details.
+
+You can add this repository to HACS on your Home Assistant instance with the button below.
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mvdwetering&repository=epson_test&category=integration)
+
+If the button does not work, or you don't want to use it, follow these steps to add the integration to HACS manually.
+
+<details>
+<summary>Manual HACS configuration steps</summary>
+
+- Go to your Home Assistant instance
+- Open the HACS page
+- Add this repository as a custom repo through the ⋮ menu as type "Integration"
+- Search for "EPSON Projector test" and click it
+- Press the Download button and wait for it to download
+- **Restart Home Assistant**
+
+</details>
+
+### Manual download
+
+- Go to the [releases section on GitHub](https://github.com/mvdwetering/epson_test/releases)
+- Download the zip file for the version you want to install
+- Extract the zip
+- Ensure the `config/custom_components/epson` directory exists (create it if needed)
+- Copy the files from the zip into the `config/custom_components/epson` directory
+- **Restart Home Assistant**

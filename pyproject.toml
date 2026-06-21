@@ -1,0 +1,139 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epson_test"
+version = "0.0.0"
+license = { text = "Apache-2.0" }
+description = "Custom integration for Home Assistant to control Epson projectors to test changes to the underlying epson-projector library."
+authors = [
+  { name = "Michel van de Wetering", email = "michel.van.de.wetering+epson@gmail.com" },
+]
+maintainers = [
+  { name = "Michel van de Wetering", email = "michel.van.de.wetering+epson@gmail.com" },
+]
+readme = "README.md"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Topic :: Home Automation",
+]
+keywords = [
+  "custom component",
+  "custom integration",
+  "hacs",
+  "home-assistant",
+  "home-assistant-custom-component",
+  "homeassistant",
+  "integration",
+  "epson",
+  "epson_test",
+]
+requires-python = ">=3.14"
+
+# Also update version in manifest.json
+dependencies = ["epson-projector==0.6.0"]
+
+[project.urls]
+Documentation = "https://github.com/mvdwetering/epson_test"
+Changelog = "https://github.com/mvdwetering/epson_test/releases"
+Issues = "https://github.com/mvdwetering/epson_test/issues"
+Repository = "https://github.com/mvdwetering/epson_test"
+
+[project.optional-dependencies]
+dev = [
+  "mypy==1.17.0",
+  "ruff==0.14.10",
+  "pytest>=9.0.3",
+  "pytest-cov",
+  "pytest-mock",
+  "awesomeversion>=24.0.0",
+  "homeassistant==2026.6.0",
+  "pytest-homeassistant-custom-component",
+  "homeassistant-stubs",
+]
+
+
+[tool.coverage.report]
+exclude_also = [
+  # TYPE_CHECKING block is only executed while running mypy
+  "if TYPE_CHECKING:",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=custom_components/epson --cov-report=term-missing --cov-report=html"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+
+[tool.ruff]
+src = ["custom_components/epson", "tests"]
+
+# Most ignores are taken from Home Assistant configuration
+[tool.ruff.lint]
+ignore = [
+  "A005",   # It is just wrong
+  "ANN401", # Opiniated warning on disallowing dynamically typed expressions
+  # Ignoring missing docstrings. Most things should be clear and they tend to get out of date which is worse.
+  "D100", # Missing docstrings for public module
+  "D101", # Missing docstrings for public classes
+  "D102", # Missing docstrings for public methods
+  "D103", # Missing docstrings for public functions
+  "D104", # Missing docstrings in public package
+  "D105", # Missing docstrings in magic method
+  "D107", # Missing docstrings in __init__
+
+  "D203",   # Conflicts with other rules
+  "D213",   # Conflicts with other rules
+  "RUF012", # Just broken
+  "TID252", # Relative imports
+
+  # Formatter conflicts
+  "COM812",
+  "COM819",
+  "D206",
+  "E501",
+  "ISC001",
+  "Q000",
+  "Q001",
+  "Q002",
+  "Q003",
+  "W191",
+]
+select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+  "S101",    # Asserts in tests is ok
+  "PLR2004", # Magic values in tests is ok(-ish)
+]
+
+[tool.ruff.lint.flake8-import-conventions.extend-aliases]
+"homeassistant.helpers.area_registry" = "ar"
+"homeassistant.helpers.config_validation" = "cv"
+"homeassistant.helpers.device_registry" = "dr"
+"homeassistant.helpers.entity_registry" = "er"
+"homeassistant.helpers.issue_registry" = "ir"
+voluptuous = "vol"
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["custom_components", "epson_test"]
+known-third-party = ["homeassistant"]
+combine-as-imports = true
+
+[tool.pylint."MESSAGES CONTROL"]
+# Reasons disabled:
+# format - handled by ruff
+# duplicate-code - unavoidable
+# used-before-assignment - false positives with TYPE_CHECKING structures
+disable = [
+  "abstract-method",
+  "duplicate-code",
+  "format",
+  "unexpected-keyword-arg",
+  "used-before-assignment",
+]
