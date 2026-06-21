@@ -7,5 +7,6 @@
   "integration_type": "device",
   "iot_class": "local_polling",
   "loggers": ["epson_projector"],
-  "requirements": ["epson-projector==0.6.0"]
+  "requirements": ["epson-projector==0.6.0"],
+  "version": "0.0.0"
 }
