@@ -7,5 +7,5 @@ CONF_CONNECTION_TYPE = "connection_type"
 ATTR_CMODE = "cmode"
 
 HTTP = "http"
-ESCVPNET = "escvpnet"
+ESCVPNET = "tcp"
 SERIAL = "serial"

@@ -27,7 +27,7 @@
         "connection_type": {
             "options": {
                 "http": "HTTP",
-                "escvpnet": "ESC/VP.net",
+                "tcp": "ESC/VP.net",
                 "serial": "Serial"
             }
         }
