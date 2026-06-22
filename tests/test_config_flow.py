@@ -9,12 +9,12 @@ from homeassistant.const import CONF_HOST, CONF_NAME, STATE_UNAVAILABLE
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
-from custom_components.epson.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
+from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
 
 async def test_form(hass: HomeAssistant) -> None:
     """Test we get the form."""
 
-    with patch("custom_components.epson.Projector.get_power", return_value="01"):
+    with patch("custom_components.epson_test.Projector.get_power", return_value="01"):
         result = await hass.config_entries.flow.async_init(
             DOMAIN, context={"source": config_entries.SOURCE_USER}
         )
@@ -23,19 +23,19 @@ async def test_form(hass: HomeAssistant) -> None:
     assert result["step_id"] == config_entries.SOURCE_USER
     with (
         patch(
-            "custom_components.epson.Projector.get_power",
+            "custom_components.epson_test.Projector.get_power",
             return_value="01",
         ),
         patch(
-            "custom_components.epson.Projector.get_serial_number",
+            "custom_components.epson_test.Projector.get_serial_number",
             return_value="12345",
         ),
         patch(
-            "custom_components.epson.async_setup_entry",
+            "custom_components.epson_test.async_setup_entry",
             return_value=True,
         ),
         patch(
-            "custom_components.epson.Projector.close",
+            "custom_components.epson_test.Projector.close",
             return_value=True,
         ) as mock_setup_entry,
     ):
@@ -58,7 +58,7 @@ async def test_form_cannot_connect(hass: HomeAssistant) -> None:
     )
 
     with patch(
-        "custom_components.epson.Projector.get_power",
+        "custom_components.epson_test.Projector.get_power",
         return_value=STATE_UNAVAILABLE,
     ):
         result2 = await hass.config_entries.flow.async_configure(
@@ -77,7 +77,7 @@ async def test_form_powered_off(hass: HomeAssistant) -> None:
     )
 
     with patch(
-        "custom_components.epson.Projector.get_power",
+        "custom_components.epson_test.Projector.get_power",
         return_value=PWR_OFF_STATE,
     ):
         result2 = await hass.config_entries.flow.async_configure(

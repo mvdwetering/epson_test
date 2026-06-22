@@ -6,7 +6,7 @@ from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
 
 from pytest_homeassistant_custom_component.common import MockConfigEntry
-from custom_components.epson.const import CONF_CONNECTION_TYPE, DOMAIN
+from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN
 
 
 async def test_migrate_entry(hass: HomeAssistant) -> None:
@@ -14,7 +14,7 @@ async def test_migrate_entry(hass: HomeAssistant) -> None:
 
     mock_entry = MockConfigEntry(
         domain=DOMAIN,
-        title="Epson",
+        title="Epson Test",
         version=1,
         minor_version=1,
         data={CONF_HOST: "1.1.1.1"},
@@ -25,7 +25,7 @@ async def test_migrate_entry(hass: HomeAssistant) -> None:
     mock_entry.add_to_hass(hass)
 
     # Create entity entry to migrate to new unique ID
-    with patch("custom_components.epson.Projector.get_power"):
+    with patch("custom_components.epson_test.Projector.get_power"):
         await hass.config_entries.async_setup(mock_entry.entry_id)
         await hass.async_block_till_done()
 

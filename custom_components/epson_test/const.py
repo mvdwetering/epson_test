@@ -1,6 +1,6 @@
 """Constants for the epson integration."""
 
-DOMAIN = "epson"
+DOMAIN = "epson_test"
 
 CONF_CONNECTION_TYPE = "connection_type"
 

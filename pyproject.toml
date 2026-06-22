@@ -8,10 +8,10 @@ version = "0.0.0"
 license = { text = "Apache-2.0" }
 description = "Custom integration for Home Assistant to control Epson projectors to test changes to the underlying epson-projector library."
 authors = [
-  { name = "Michel van de Wetering", email = "michel.van.de.wetering+epson@gmail.com" },
+  { name = "Michel van de Wetering", email = "michel.van.de.wetering+epson_test@gmail.com" },
 ]
 maintainers = [
-  { name = "Michel van de Wetering", email = "michel.van.de.wetering+epson@gmail.com" },
+  { name = "Michel van de Wetering", email = "michel.van.de.wetering+epson_test@gmail.com" },
 ]
 readme = "README.md"
 classifiers = [
@@ -30,7 +30,6 @@ keywords = [
   "homeassistant",
   "integration",
   "epson",
-  "epson_test",
 ]
 requires-python = ">=3.14"
 
@@ -64,13 +63,13 @@ exclude_also = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=custom_components/epson --cov-report=term-missing --cov-report=html"
+addopts = "--cov=custom_components/epson_test --cov-report=term-missing --cov-report=html"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 
 [tool.ruff]
-src = ["custom_components/epson"]
+src = ["custom_components/epson_test"]
 
 # Most ignores are taken from Home Assistant configuration
 [tool.ruff.lint]

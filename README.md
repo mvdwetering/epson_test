@@ -4,7 +4,9 @@ Minimum required Home Assistant version is: 2026.6.0
 
 ## About
 
-This is a custom integration that _overrides_ the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It't main purpose is to test out changes/concepts for the underlying epson-projector library.
+This is a custom integration that lives next to the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It't main purpose is to test out changes/concepts for the underlying epson-projector library.
+
+Disable the standard Epson entry if you want to connect to the same projector from hte Epson Test integration.
 
 DO NOT USE THIS FOR A PRODUCTION SYSTEM!
 

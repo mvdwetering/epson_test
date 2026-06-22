@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
-from custom_components.epson.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
+from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
 
 
 async def test_set_unique_id(
@@ -21,32 +21,32 @@ async def test_set_unique_id(
     """Test the unique id is set on runtime."""
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title="Epson",
+        title="Epson Test",
         data={CONF_CONNECTION_TYPE: HTTP, CONF_HOST: "1.1.1.1"},
         entry_id="1cb78c095906279574a0442a1f0003ef",
     )
     entry.add_to_hass(hass)
-    with patch("custom_components.epson.Projector.get_power"):
+    with patch("custom_components.epson_test.Projector.get_power"):
         await hass.config_entries.async_setup(entry.entry_id)
         await hass.async_block_till_done()
         assert entry.unique_id is None
-        entity_entry = entity_registry.async_get("media_player.epson")
+        entity_entry = entity_registry.async_get("media_player.epson_test")
         assert entity_entry
         assert entity_entry.unique_id == entry.entry_id
     with (
-        patch("custom_components.epson.Projector.get_power", return_value="01"),
+        patch("custom_components.epson_test.Projector.get_power", return_value="01"),
         patch(
-            "custom_components.epson.Projector.get_serial_number",
+            "custom_components.epson_test.Projector.get_serial_number",
             return_value="123",
         ),
         patch(
-            "custom_components.epson.Projector.get_property",
+            "custom_components.epson_test.Projector.get_property",
         ),
     ):
         freezer.tick(timedelta(seconds=30))
         async_fire_time_changed(hass)
         await hass.async_block_till_done()
-        entity_entry = entity_registry.async_get("media_player.epson")
+        entity_entry = entity_registry.async_get("media_player.epson_test")
         assert entity_entry
         assert entity_entry.unique_id == "123"
         assert entry.unique_id == "123"

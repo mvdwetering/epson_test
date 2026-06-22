@@ -63,7 +63,7 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
 
     _attr_has_entity_name = True
     _attr_name = None
-    _attr_device_class = MediaPlayerDeviceClass.PROJECTOR
+    # _attr_device_class = MediaPlayerDeviceClass.PROJECTOR
 
     _attr_supported_features = (
         MediaPlayerEntityFeature.TURN_ON

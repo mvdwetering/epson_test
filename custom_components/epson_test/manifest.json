@@ -1,9 +1,9 @@
 {
-  "domain": "epson",
-  "name": "Epson",
+  "domain": "epson_test",
+  "name": "Epson Test",
   "codeowners": ["@pszafer"],
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/epson",
+  "documentation": "https://www.home-assistant.io/integrations/epson_test",
   "integration_type": "device",
   "iot_class": "local_polling",
   "loggers": ["epson_projector"],
