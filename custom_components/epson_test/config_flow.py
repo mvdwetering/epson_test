@@ -4,7 +4,7 @@ import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
 import voluptuous as vol
 
@@ -22,6 +22,7 @@ DATA_SCHEMA = vol.Schema(
             )
         ),
         vol.Required(CONF_HOST): str,
+        vol.Optional(CONF_PASSWORD): str,
         vol.Optional(CONF_PORT): str,
     }
 )
@@ -52,6 +53,7 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
                     port=user_input.get(CONF_PORT),
                     check_power=True,
                     check_powered_on=check_power,
+                    password=user_input.get(CONF_PASSWORD),
                 )
             except CannotConnect:
                 errors["base"] = "cannot_connect"

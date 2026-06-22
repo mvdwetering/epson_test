@@ -3,15 +3,18 @@
 import logging
 from typing import TYPE_CHECKING
 
+import aiohttp
 from epson_projector import Projector  # type: ignore[import]
 from epson_projector.const import (  # type: ignore[import]
     PWR_OFF_STATE,
     STATE_UNAVAILABLE as EPSON_STATE_UNAVAILABLE,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_PORT, Platform
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, Platform
 from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.aiohttp_client import (
+    async_create_clientsession,
+)
 
 from .const import CONF_CONNECTION_TYPE, DOMAIN, ESCVPNET, HTTP
 from .exceptions import CannotConnect, PoweredOff
@@ -36,12 +39,24 @@ async def validate_projector(
     check_power: bool = True,
     check_powered_on: bool = True,
     port: str | None = None,
+    password: str | None = None,
 ) -> Projector:
     """Validate the given projector host allows us to connect."""
+    middlewares = []
+    if password:
+        _LOGGER.info("Using password for authentication")
+        digest_auth = aiohttp.DigestAuthMiddleware(
+            login="EPSONWEB", password=password
+        )
+        middlewares.append(digest_auth)
+
+    session = async_create_clientsession(hass, verify_ssl=False, middlewares=middlewares)
+
     epson_proj = Projector(
         host=host,
-        websession=async_get_clientsession(hass, verify_ssl=False),
+        websession=session,
         type=conn_type,
+        tcp_password=password,
     )
 
     if port:
@@ -78,6 +93,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: EpsonConfigEntry) -> boo
         check_power=False,
         check_powered_on=False,
         port=entry.data.get(CONF_PORT),
+        password=entry.data.get(CONF_PASSWORD),
     )
     entry.runtime_data = projector
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

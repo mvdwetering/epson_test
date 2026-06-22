@@ -12,10 +12,12 @@
                 "data": {
                     "connection_type": "Connection type",
                     "host": "Host",
+                    "password": "Password",
                     "port": "Custom port"
                 },
                 "data_description": {
                     "host": "The hostname, IP address or serial port of your Epson projector.",
+                    "password": "The password for your Epson projector, if required.",
                     "port": "The custom port, leave empty for normal projectors. Useful to connect to a projector emulator."
                 }
             }
