@@ -15,9 +15,11 @@ Backward compatibility not guarenteed.
 ## Progress tracking
 
 * Temporariliy add an option to specify custom ports to more easily work with a [projector-emulator](https://github.com/mvdwetering/epson-projector-tools).
-* Added ESC/VP.net support (it is selectable, untested yet, keep for later)
+* Added ESC/VP.net support (it is selectable, untested yet)
 * Error message 401 from Epson = Authorization required --> No password support
-
+  * Added password support against `test_1` branch
+* Next hurdle is serial number. LS11000 does not support the EasyMP serial number method on port 3620
+  * Both HTTP and ESC/VP.net fail on this
 
 ## Downloading
 
