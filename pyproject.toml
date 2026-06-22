@@ -34,7 +34,7 @@ keywords = [
 requires-python = ">=3.14"
 
 # Also update version in manifest.json
-dependencies = ["epson-projector==0.6.0"]
+dependencies = ["epson-projector@git+https://github.com/mvdwetering/epson_projector.git@test_1"]
 
 [project.urls]
 Documentation = "https://github.com/mvdwetering/epson_test"
