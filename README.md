@@ -4,11 +4,20 @@ Minimum required Home Assistant version is: 2026.6.0
 
 ## About
 
-This is a custom integration that lives next to the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It't main purpose is to test out changes/concepts for the underlying epson-projector library.
+This is a custom integration that lives next to the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It's main purpose is to figure out what is needed to get LS11000 working and test out changes/concepts for the underlying epson-projector library.
 
 Disable the standard Epson entry if you want to connect to the same projector from hte Epson Test integration.
 
 DO NOT USE THIS FOR A PRODUCTION SYSTEM!
+
+Backward compatibility not guarenteed.
+
+## Progress tracking
+
+* Temporariliy add an option to specify custom ports to more easily work with a [projector-emulator](https://github.com/mvdwetering/epson-projector-tools).
+* Added ESC/VP.net support (it is selectable, untested yet, keep for later)
+* Error message 401 from Epson = Authorization required --> No password support
+
 
 ## Downloading
 
