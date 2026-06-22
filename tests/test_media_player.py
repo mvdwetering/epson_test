@@ -1,16 +1,21 @@
 """Tests for the epson integration."""
 
 from datetime import timedelta
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
-from freezegun.api import FrozenDateTimeFactory
-
 from homeassistant.const import CONF_HOST
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry as er
+from pytest_homeassistant_custom_component.common import (  # type: ignore[import]
+    MockConfigEntry,
+    async_fire_time_changed,
+)
 
-from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
+
+if TYPE_CHECKING:
+    from freezegun.api import FrozenDateTimeFactory
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers import entity_registry as er
 
 
 async def test_set_unique_id(

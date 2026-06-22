@@ -45,7 +45,9 @@ async def validate_projector(
     )
     if conn_type == HTTP_EMULATOR:
         _LOGGER.debug("Using HTTP emulator on port 8080")
-        epson_proj._projector._http_url = epson_proj._projector._http_url.replace(":80/", ":8080/")
+        epson_proj._projector._http_url = epson_proj._projector._http_url.replace(
+            ":80/", ":8080/"
+        )
 
     if check_power:
         _power = await epson_proj.get_power()

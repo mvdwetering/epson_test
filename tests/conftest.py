@@ -1,4 +1,5 @@
 """Common fixtures  for the Philips Hue Play HDMI Sync Box integration tests."""
+
 from __future__ import annotations
 
 from unittest.mock import patch

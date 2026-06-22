@@ -1,17 +1,21 @@
 """Test the epson init."""
 
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 from homeassistant.const import CONF_HOST
-from homeassistant.core import HomeAssistant
+from pytest_homeassistant_custom_component.common import (  # type: ignore[import]
+    MockConfigEntry,
+)
 
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
 
 
 async def test_migrate_entry(hass: HomeAssistant) -> None:
     """Test successful migration of entry data from version 1 to 1.2."""
-
     mock_entry = MockConfigEntry(
         domain=DOMAIN,
         title="Epson Test",

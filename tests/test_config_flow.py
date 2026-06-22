@@ -1,19 +1,21 @@
 """Test the epson config flow."""
 
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
-from epson_projector.const import PWR_OFF_STATE
-
+from epson_projector.const import PWR_OFF_STATE  # type: ignore[import]
 from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_NAME, STATE_UNAVAILABLE
-from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
 from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
 
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+
+
 async def test_form(hass: HomeAssistant) -> None:
     """Test we get the form."""
-
     with patch("custom_components.epson_test.Projector.get_power", return_value="01"):
         result = await hass.config_entries.flow.async_init(
             DOMAIN, context={"source": config_entries.SOURCE_USER}
