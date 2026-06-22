@@ -1,23 +1,25 @@
 """The epson integration."""
 
 import logging
+from typing import TYPE_CHECKING
 
-from epson_projector import Projector
-from epson_projector.const import (
+from epson_projector import Projector  # type: ignore[import]
+from epson_projector.const import (  # type: ignore[import]
     PWR_OFF_STATE,
     STATE_UNAVAILABLE as EPSON_STATE_UNAVAILABLE,
 )
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, Platform
-from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.typing import ConfigType
 
-from .const import CONF_CONNECTION_TYPE, DOMAIN, HTTP, HTTP_EMULATOR
+from .const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
 from .exceptions import CannotConnect, PoweredOff
 from .services import async_setup_services
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.typing import ConfigType
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 PLATFORMS = [Platform.MEDIA_PLAYER]
@@ -35,19 +37,11 @@ async def validate_projector(
     check_powered_on: bool = True,
 ):
     """Validate the given projector host allows us to connect."""
-    temp_conn_type = conn_type
-    if conn_type == HTTP_EMULATOR:
-        temp_conn_type = HTTP
     epson_proj = Projector(
         host=host,
         websession=async_get_clientsession(hass, verify_ssl=False),
-        type=temp_conn_type,
+        type=conn_type,
     )
-    if conn_type == HTTP_EMULATOR:
-        _LOGGER.debug("Using HTTP emulator on port 8080")
-        epson_proj._projector._http_url = epson_proj._projector._http_url.replace(
-            ":80/", ":8080/"
-        )
 
     if check_power:
         _power = await epson_proj.get_power()

@@ -1,9 +1,10 @@
 """Support for Epson projector."""
 
 import logging
+from typing import TYPE_CHECKING
 
-from epson_projector import Projector, ProjectorUnavailableError
-from epson_projector.const import (
+from epson_projector import Projector, ProjectorUnavailableError  # type: ignore[import]
+from epson_projector.const import (  # type: ignore[import]
     BACK,
     BUSY_CODES,
     CMODE,
@@ -25,21 +26,22 @@ from epson_projector.const import (
     VOL_UP,
     VOLUME,
 )
-
 from homeassistant.components.media_player import (
-    MediaPlayerDeviceClass,
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
     MediaPlayerState,
 )
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from . import EpsonConfigEntry
 from .const import ATTR_CMODE, DOMAIN
+
+if TYPE_CHECKING:
+    from homeassistant.config_entries import ConfigEntry
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+
+    from . import EpsonConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,7 +65,6 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
 
     _attr_has_entity_name = True
     _attr_name = None
-    # _attr_device_class = MediaPlayerDeviceClass.PROJECTOR
 
     _attr_supported_features = (
         MediaPlayerEntityFeature.TURN_ON
@@ -133,9 +134,9 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
                 return
             self._attr_source_list = list(DEFAULT_SOURCES.values())
             cmode = await self._projector.get_property(CMODE)
-            self._cmode = CMODE_LIST.get(cmode, self._cmode)
+            self._cmode = CMODE_LIST.get(cmode, self._cmode) # type: ignore  # noqa: PGH003
             source = await self._projector.get_property(SOURCE)
-            self._attr_source = SOURCE_LIST.get(source, self._attr_source)
+            self._attr_source = SOURCE_LIST.get(source, self._attr_source) # type: ignore  # noqa: PGH003
             if volume := await self._projector.get_property(VOLUME):
                 try:
                     self._attr_volume_level = float(volume)

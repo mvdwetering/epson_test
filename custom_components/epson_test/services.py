@@ -1,11 +1,10 @@
 """Support for Epson projector."""
 
-from epson_projector.const import CMODE_LIST_SET
-import voluptuous as vol
-
+from epson_projector.const import CMODE_LIST_SET  # type: ignore[import]
 from homeassistant.components.media_player import DOMAIN as MEDIA_PLAYER_DOMAIN
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv, service
+import voluptuous as vol
 
 from .const import ATTR_CMODE, DOMAIN
 

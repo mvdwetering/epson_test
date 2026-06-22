@@ -3,17 +3,16 @@
 import logging
 from typing import Any
 
-import voluptuous as vol
-
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
+import voluptuous as vol
 
 from . import validate_projector
-from .const import CONF_CONNECTION_TYPE, DOMAIN, HTTP, SERIAL, HTTP_EMULATOR, ESCVPNET
+from .const import CONF_CONNECTION_TYPE, DOMAIN, ESCVPNET, HTTP, SERIAL
 from .exceptions import CannotConnect, PoweredOff
 
-ALLOWED_CONNECTION_TYPE = [HTTP, HTTP_EMULATOR, ESCVPNET, SERIAL]
+ALLOWED_CONNECTION_TYPE = [HTTP, ESCVPNET, SERIAL]
 
 DATA_SCHEMA = vol.Schema(
     {
