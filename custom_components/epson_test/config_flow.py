@@ -4,7 +4,7 @@ import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
+from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
 import voluptuous as vol
 
@@ -22,9 +22,7 @@ DATA_SCHEMA = vol.Schema(
             )
         ),
         vol.Required(CONF_HOST): str,
-        # Name field is no longer allowed in config flow schemas
-        # pylint: disable-next=home-assistant-config-flow-name-field
-        vol.Required(CONF_NAME, default=DOMAIN): str,
+        vol.Optional(CONF_PORT): str,
     }
 )
 
@@ -51,6 +49,7 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
                     hass=self.hass,
                     conn_type=user_input[CONF_CONNECTION_TYPE],
                     host=user_input[CONF_HOST],
+                    port=user_input.get(CONF_PORT),
                     check_power=True,
                     check_powered_on=check_power,
                 )
@@ -65,9 +64,8 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
                 serial_no = await projector.get_serial_number()
                 await self.async_set_unique_id(serial_no)
                 self._abort_if_unique_id_configured()
-                user_input.pop(CONF_PORT, None)
                 return self.async_create_entry(
-                    title=user_input.pop(CONF_NAME), data=user_input
+                    title="Epson Projector", data=user_input
                 )
             finally:
                 if projector:

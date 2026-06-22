@@ -12,10 +12,11 @@
                 "data": {
                     "connection_type": "Connection type",
                     "host": "Host",
-                    "name": "Name"
+                    "port": "Custom port"
                 },
                 "data_description": {
-                    "host": "The hostname, IP address or serial port of your Epson projector."
+                    "host": "The hostname, IP address or serial port of your Epson projector.",
+                    "port": "The custom port, leave empty for normal projectors. Useful to connect to a projector emulator."
                 }
             }
         }
@@ -24,8 +25,7 @@
         "connection_type": {
             "options": {
                 "http": "HTTP",
-                "http_emulator": "HTTP emulator on port 8080",
-                "tcp": "ESC/VP.net",
+                "escvpnet": "ESC/VP.net",
                 "serial": "Serial"
             }
         }

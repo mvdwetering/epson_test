@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from epson_projector.const import PWR_OFF_STATE  # type: ignore[import]
 from homeassistant import config_entries
-from homeassistant.const import CONF_HOST, CONF_NAME, STATE_UNAVAILABLE
+from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT, STATE_UNAVAILABLE
 from homeassistant.data_entry_flow import FlowResultType
 
 from custom_components.epson_test.const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
@@ -43,13 +43,13 @@ async def test_form(hass: HomeAssistant) -> None:
     ):
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            {CONF_HOST: "1.1.1.1", CONF_NAME: "test-epson"},
+            {CONF_HOST: "1.1.1.1", CONF_PORT: "8080", CONF_CONNECTION_TYPE: HTTP},
         )
         await hass.async_block_till_done()
 
     assert result2["type"] is FlowResultType.CREATE_ENTRY
-    assert result2["title"] == "test-epson"
-    assert result2["data"] == {CONF_CONNECTION_TYPE: HTTP, CONF_HOST: "1.1.1.1"}
+    assert result2["title"] == "Epson Projector"
+    assert result2["data"] == {CONF_CONNECTION_TYPE: HTTP, CONF_HOST: "1.1.1.1", CONF_PORT: "8080"}
     assert len(mock_setup_entry.mock_calls) == 1
 
 
@@ -65,7 +65,7 @@ async def test_form_cannot_connect(hass: HomeAssistant) -> None:
     ):
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            {CONF_HOST: "1.1.1.1", CONF_NAME: "test-epson"},
+            {CONF_HOST: "1.1.1.1"},
         )
 
     assert result2["type"] is FlowResultType.FORM
@@ -84,7 +84,7 @@ async def test_form_powered_off(hass: HomeAssistant) -> None:
     ):
         result2 = await hass.config_entries.flow.async_configure(
             result["flow_id"],
-            {CONF_HOST: "1.1.1.1", CONF_NAME: "test-epson"},
+            {CONF_HOST: "1.1.1.1"},
         )
 
     assert result2["type"] is FlowResultType.FORM

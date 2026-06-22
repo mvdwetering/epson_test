@@ -9,11 +9,11 @@ from epson_projector.const import (  # type: ignore[import]
     STATE_UNAVAILABLE as EPSON_STATE_UNAVAILABLE,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, Platform
+from homeassistant.const import CONF_HOST, CONF_PORT, Platform
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import CONF_CONNECTION_TYPE, DOMAIN, HTTP
+from .const import CONF_CONNECTION_TYPE, DOMAIN, ESCVPNET, HTTP
 from .exceptions import CannotConnect, PoweredOff
 from .services import async_setup_services
 
@@ -35,13 +35,22 @@ async def validate_projector(
     conn_type: str,
     check_power: bool = True,
     check_powered_on: bool = True,
-):
+    port: str | None = None,
+) -> Projector:
     """Validate the given projector host allows us to connect."""
     epson_proj = Projector(
         host=host,
         websession=async_get_clientsession(hass, verify_ssl=False),
         type=conn_type,
     )
+
+    if port:
+        if conn_type == HTTP:
+            epson_proj._projector._http_url = epson_proj._projector._http_url.replace(  # noqa: SLF001 # pyright: ignore[reportAttributeAccessIssue]
+                ":80/", f":{port}/"
+            )
+        elif conn_type == ESCVPNET:
+            epson_proj._projector._port = int(port) # pyright: ignore[reportAttributeAccessIssue]  # noqa: SLF001
 
     if check_power:
         _power = await epson_proj.get_power()
@@ -68,6 +77,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: EpsonConfigEntry) -> boo
         conn_type=entry.data[CONF_CONNECTION_TYPE],
         check_power=False,
         check_powered_on=False,
+        port=entry.data.get(CONF_PORT),
     )
     entry.runtime_data = projector
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
