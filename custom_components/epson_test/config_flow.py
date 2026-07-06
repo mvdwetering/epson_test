@@ -63,7 +63,7 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
                 )
                 errors["base"] = "powered_off"
             else:
-                serial_no = await projector.get_serial_number()
+                serial_no = await projector.get_serial_number_alt()
                 await self.async_set_unique_id(serial_no)
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
