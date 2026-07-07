@@ -6,11 +6,27 @@ Minimum required Home Assistant version is: 2026.6.0
 
 This is a custom integration that lives next to the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It's main purpose is to figure out what is needed to get LS11000 working and test out changes/concepts for the underlying epson-projector library.
 
-Disable the standard Epson entry if you want to connect to the same projector from hte Epson Test integration.
+Disable the standard Epson entry if you want to connect to the same projector from the Epson Test integration.
 
 DO NOT USE THIS FOR A PRODUCTION SYSTEM!
 
 Backward compatibility not guarenteed.
+
+## Goal
+
+The initial goal is to:
+
+* Make it possible to add LS11000 to Home Assistant
+* Add a lamp hours sensor
+* Add a remote entity to be able to use the arrow keys, menu, enter, default, esc buttons from my UC Remote 2 (universal remote that can talk to Home Assistant)
+
+Potential later steps (not in this PoC)
+
+* Make CMode a select entity
+* Use Data Update Coordinator for polling
+* Add more sources
+* Make Mute state aware (it now sends the Mute key which presumably toggles mute)
+* Capability detection/selection, to avoid exposing/polling things that are not supported. Could be based on responses from projector, options flow or a model based capabilities table.
 
 ## Progress tracking
 
