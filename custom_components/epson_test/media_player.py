@@ -70,6 +70,7 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
         MediaPlayerEntityFeature.TURN_ON
         | MediaPlayerEntityFeature.TURN_OFF
         | MediaPlayerEntityFeature.SELECT_SOURCE
+        | MediaPlayerEntityFeature.VOLUME_SET
         | MediaPlayerEntityFeature.VOLUME_MUTE
         | MediaPlayerEntityFeature.VOLUME_STEP
         | MediaPlayerEntityFeature.NEXT_TRACK
@@ -139,8 +140,10 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
             self._attr_source = SOURCE_LIST.get(source, self._attr_source) # type: ignore  # noqa: PGH003
             if volume := await self._projector.get_property(VOLUME):
                 try:
-                    self._attr_volume_level = float(volume)
+                    _LOGGER.debug("Volume: %s, %s", volume, float(volume) / 255.0)
+                    self._attr_volume_level = float(volume) / 255.0
                 except ValueError:
+                    _LOGGER.debug("Volume value is not a float: %s", volume)
                     self._attr_volume_level = None
         elif power_state in BUSY_CODES:
             self._attr_state = MediaPlayerState.ON
