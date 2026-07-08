@@ -28,7 +28,9 @@ Potential later steps (not in this PoC)
 * Make Mute state aware (it now sends the Mute key which presumably toggles mute)
 * Capability detection/selection, to avoid exposing/polling things that are not supported. Could be based on responses from projector, options flow or a model based capabilities table.
 
-## Progress tracking
+## Progress and findings tracking
+
+List of things I built and findings while building it in chronological order.
 
 * Temporariliy add an option to specify custom ports to more easily work with a [projector-emulator](https://github.com/mvdwetering/epson-projector-tools).
 * Added ESC/VP.net support (it is selectable, untested yet)
@@ -50,6 +52,11 @@ Potential later steps (not in this PoC)
 * There are implementations for play, pause, next, previous, but the buttons do not show in the UI. Only `MediaPlayerEntityFeature.NEXT_TRACK` and `MediaPlayerEntityFeature.PREVIOUS_TRACK` are indicated as features. While not shown in the card, prev/next are listed as actions by the automation editor.
 * Mute ignores the mute parameter, it always toggles.
 * When executing actions it always says it was succesful even when request is ignored by BUSY condition. This makes it impossible to have multiple actions in sequence. This was tested manually from automation editor.
+* Added Remote platform with `power_on`, `power_off`, `menu`, `up`, `down`, `left`, `right`, `enter`, `esc` commands. Use the new convenience command to avoid the 3 seconds BUSY
+
+BIG TODOS:
+
+* Error handling
 
 ## Raw command action
 
