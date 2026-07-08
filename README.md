@@ -53,6 +53,7 @@ List of things I built and findings while building it in chronological order.
 * Mute ignores the mute parameter, it always toggles.
 * When executing actions it always says it was succesful even when request is ignored by BUSY condition. This makes it impossible to have multiple actions in sequence. This was tested manually from automation editor.
 * Added Remote platform with `power_on`, `power_off`, `menu`, `up`, `down`, `left`, `right`, `enter`, `esc` commands. Use the new convenience command to avoid the 3 seconds BUSY
+* Disabled power on check
 
 BIG TODOS:
 
