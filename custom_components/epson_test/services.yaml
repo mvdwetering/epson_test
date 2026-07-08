@@ -1,3 +1,16 @@
+send_raw_command:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: epson_test
+    raw_command:
+      required: true
+      example: "PWR?"
+      selector:
+        text:
+
 select_cmode:
   target:
     entity:

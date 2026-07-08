@@ -47,6 +47,38 @@ Potential later steps (not in this PoC)
   * After fixing these issues the volume slider shows up and updates when reading changed values from the projector. But...
     * Setting volume is not implemented and results in an error message.
     * The +/- volume buttons disappeared. I think they used to always be there, but they are hidden since the recent-ish UI rework for mediaplayer card when volume setting is available.
+* There are implementations for play, pause, next, previous, but the buttons do not show in the UI. Only `MediaPlayerEntityFeature.NEXT_TRACK` and `MediaPlayerEntityFeature.PREVIOUS_TRACK` are indicated as features. While not shown in the card, prev/next are listed as actions by the automation editor.
+* Mute ignores the mute parameter, it always toggles.
+* When executing actions it always says it was succesful even when request is ignored by BUSY condition. This makes it impossible to have multiple actions in sequence. This was tested manually from automation editor.
+
+## Raw command action
+
+Use the `epson_test.send_raw_command` action to send a raw Epson command and get the projector response back.
+
+Fields:
+
+* `config_entry_id` (required): The Epson Test config entry id
+* `raw_command` (required): The raw command to send, for example `PWR?`
+
+Example in a script/automation using the response:
+
+```yaml
+alias: Query Epson power state
+sequence:
+  - action: epson_test.send_raw_command
+    data:
+      config_entry_id: 1cb78c095906279574a0442a1f0003ef
+      raw_command: "PWR?"
+    response_variable: epson_raw
+  - action: logbook.log
+    data:
+      name: Epson raw response
+      message: "{{ epson_raw.response }}"
+mode: single
+```
+
+The action response payload is a dictionary with a single key: `response`.
+
 
 ## Downloading
 

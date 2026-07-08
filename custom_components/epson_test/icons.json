@@ -2,6 +2,9 @@
   "services": {
     "select_cmode": {
       "service": "mdi:palette"
+    },
+    "send_raw_command": {
+        "service": "mdi:raw"
     }
   },
   "entity": {

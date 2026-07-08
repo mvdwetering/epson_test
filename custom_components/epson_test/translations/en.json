@@ -1,4 +1,9 @@
 {
+    "exceptions": {
+        "config_entry_not_found": {
+            "message": "Could not find loaded config entry with id '{config_entry_id}'"
+        }
+    },
     "config": {
         "abort": {
             "already_configured": "Device is already configured"
@@ -33,6 +38,20 @@
         }
     },
     "services": {
+        "send_raw_command": {
+            "description": "Sends a raw command to the configured Epson projector and returns the response.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "The Epson Test config entry to send the command to.",
+                    "name": "Config entry"
+                },
+                "raw_command": {
+                    "description": "Raw Epson command to send.",
+                    "name": "Raw command"
+                }
+            },
+            "name": "Send raw command"
+        },
         "select_cmode": {
             "description": "Selects color mode of Epson projector.",
             "fields": {
