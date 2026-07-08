@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from homeassistant.helpers.typing import ConfigType
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
-PLATFORMS = [Platform.MEDIA_PLAYER]
+PLATFORMS = [Platform.MEDIA_PLAYER, Platform.SENSOR]
 
 _LOGGER = logging.getLogger(__name__)
 

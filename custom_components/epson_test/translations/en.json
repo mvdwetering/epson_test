@@ -43,5 +43,12 @@
             },
             "name": "Select color mode"
         }
+    },
+    "entity": {
+        "sensor": {
+            "lamp_hours": {
+                "name": "Lamp hours"
+            }
+        }
     }
 }

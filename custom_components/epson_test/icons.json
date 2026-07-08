@@ -3,5 +3,12 @@
     "select_cmode": {
       "service": "mdi:palette"
     }
+  },
+  "entity": {
+    "sensor": {
+      "lamp_hours": {
+        "default": "mdi:lightbulb"
+      }
+    }
   }
 }
