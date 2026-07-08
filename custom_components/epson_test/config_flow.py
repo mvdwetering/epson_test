@@ -43,7 +43,7 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             # Epson projector doesn't appear to need to be on for serial
-            check_power = user_input[CONF_CONNECTION_TYPE] != SERIAL
+            check_power = False # user_input[CONF_CONNECTION_TYPE] != SERIAL
             projector = None
             try:
                 projector = await validate_projector(

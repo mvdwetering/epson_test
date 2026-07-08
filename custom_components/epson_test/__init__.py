@@ -37,7 +37,7 @@ async def validate_projector(
     host: str,
     conn_type: str,
     check_power: bool = True,
-    check_powered_on: bool = True,
+    check_powered_on: bool = False,
     port: str | None = None,
     password: str | None = None,
 ) -> Projector:
