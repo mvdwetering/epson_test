@@ -34,7 +34,7 @@ ENTITY_DESCRIPTIONS = [
         entity_category=EntityCategory.DIAGNOSTIC,
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement="h",
-        value_fn=lambda projector: projector.get("LAMP")   # projector.get_lamp_hours(),
+        value_fn=lambda projector: projector.get_lamp_hours(),
     )
 ]
 
