@@ -1,6 +1,6 @@
 # EPSON Projector test
 
-Minimum required Home Assistant version is: 2026.6.0
+Minimum required Home Assistant version is: 2026.7.0
 
 ## About
 
