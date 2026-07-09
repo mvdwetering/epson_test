@@ -196,6 +196,11 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
         """Decrease volume."""
         await self._projector.send_command(VOL_DOWN)
 
+    async def async_set_volume_level(self, volume: float) -> None:
+        """Set volume level, range 0..1."""
+        volume_value = int(volume * 255)
+        await self._projector.volume.set(volume_value)
+
     async def async_media_play(self) -> None:
         """Play media via Epson."""
         await self._projector.send_command(PLAY)
