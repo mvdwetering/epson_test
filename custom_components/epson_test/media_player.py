@@ -3,7 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
-from epson_projector import Projector, ProjectorUnavailableError  # type: ignore[import]
+from epson_projector import Projector, ProjectorUnavailableError, PowerStatus  # type: ignore[import]
 from epson_projector.const import (  # type: ignore[import]
     BACK,
     BUSY_CODES,
@@ -122,6 +122,7 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
         """Update state of device."""
         try:
             power_state = await self._projector.get_power()
+            new_power_state = await self._projector.power.get()
         except ProjectorUnavailableError as ex:
             _LOGGER.debug("Projector is unavailable: %s", ex)
             self._attr_available = False
@@ -129,9 +130,10 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
         if not power_state:
             self._attr_available = False
             return
-        _LOGGER.debug("Projector status: %s", power_state)
+        _LOGGER.debug("Projector status: %s, New power state: %s", power_state, new_power_state)
         self._attr_available = True
-        if power_state == EPSON_CODES[POWER]:
+        # if power_state == EPSON_CODES[POWER]:
+        if new_power_state == PowerStatus.NORMAL:
             self._attr_state = MediaPlayerState.ON
             if await self.set_unique_id():
                 return
@@ -155,13 +157,15 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
     async def async_turn_on(self) -> None:
         """Turn on epson."""
         if self.state == MediaPlayerState.OFF:
-            await self._projector.send_command(TURN_ON)
+            # await self._projector.send_command(TURN_ON)
+            await self._projector.power.on()
             self._attr_state = MediaPlayerState.ON
 
     async def async_turn_off(self) -> None:
         """Turn off epson."""
         if self.state == MediaPlayerState.ON:
-            await self._projector.send_command(TURN_OFF)
+            # await self._projector.send_command(TURN_OFF)
+            await self._projector.power.off()
             self._attr_state = MediaPlayerState.OFF
 
     async def select_cmode(self, cmode: str) -> None:
