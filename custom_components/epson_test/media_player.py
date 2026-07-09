@@ -142,12 +142,19 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
             self._cmode = CMODE_LIST.get(cmode, self._cmode) # type: ignore  # noqa: PGH003
             source = await self._projector.get_property(SOURCE)
             self._attr_source = SOURCE_LIST.get(source, self._attr_source) # type: ignore  # noqa: PGH003
-            if volume := await self._projector.get_property(VOLUME):
+            # if volume := await self._projector.get_property(VOLUME):
+            #     try:
+            #         _LOGGER.debug("Volume: %s, %s", volume, float(volume) / 255.0)
+            #         self._attr_volume_level = float(volume) / 255.0
+            #     except ValueError:
+            #         _LOGGER.debug("Volume value is not a float: %s", volume)
+            #         self._attr_volume_level = None
+            if volume := await self._projector.volume.get():
                 try:
-                    _LOGGER.debug("Volume: %s, %s", volume, float(volume) / 255.0)
-                    self._attr_volume_level = float(volume) / 255.0
+                    _LOGGER.debug("Volume: %s, %s", volume, volume / 255.0)
+                    self._attr_volume_level = volume / 255.0
                 except ValueError:
-                    _LOGGER.debug("Volume value is not a float: %s", volume)
+                    _LOGGER.debug("Volume value is not a number: %s", volume)
                     self._attr_volume_level = None
         elif power_state in BUSY_CODES:
             self._attr_state = MediaPlayerState.ON
