@@ -34,6 +34,7 @@ KEYCODE_MAP = {
     "right": KeyCodes.POINTER_RIGHT,
     "enter": KeyCodes.ENTER,
     "esc": KeyCodes.ESC,
+    "default": KeyCodes.DEFAULT,
 }
 
 if TYPE_CHECKING:  # pragma: no cover
