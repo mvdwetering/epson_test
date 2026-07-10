@@ -7,6 +7,6 @@
   "integration_type": "device",
   "iot_class": "local_polling",
   "loggers": ["epson_projector"],
-  "requirements": ["epson-projector@git+https://github.com/mvdwetering/epson_projector.git@v123.4.0"],
+  "requirements": ["epson-projector@git+https://github.com/mvdwetering/epson_projector.git@v123.4.1"],
   "version": "0.0.0"
 }
