@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from epson_projector import (  # type: ignore[import]
     KeyCodes,
+    PowerStatus,
     Projector,
     ProjectorUnavailableError,
 )
@@ -86,11 +87,14 @@ class EpsonRemote(RemoteEntity):
 
     async def async_turn_on(self, **_kwargs: Any) -> None:
         """Send the power on command."""
-        await self.async_send_command(["power_on"])
+        # await self.async_send_command(["power_on"])
+        await self._projector.power.on()
+
 
     async def async_turn_off(self, **_kwargs: Any) -> None:
         """Send the power off command."""
-        await self.async_send_command(["power_off"])
+        # await self.async_send_command(["power_off"])
+        await self._projector.power.off()
 
     async def async_send_command(self, command: Iterable[str], **kwargs: Any) -> None:
         """Send commands to a device."""
@@ -109,8 +113,9 @@ class EpsonRemote(RemoteEntity):
     async def async_update(self) -> None:
         """Update state of device."""
         try:
-            epson_power = await self._projector.get_power()
-            self._power_state = epson_power == EPSON_CODES[POWER]
+            # epson_power = await self._projector.get_power()
+            # self._power_state = epson_power == EPSON_CODES[POWER]
+            self._power_state = await self._projector.power.get() == PowerStatus.NORMAL
         except ProjectorUnavailableError as ex:
             _LOGGER.debug("Projector is unavailable: %s", ex)
             self._attr_available = False

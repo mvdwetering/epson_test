@@ -3,28 +3,19 @@
 import logging
 from typing import TYPE_CHECKING
 
-from epson_projector import Projector, ProjectorUnavailableError, PowerStatus  # type: ignore[import]
+from epson_projector import (  # type: ignore[import]
+    PowerStatus,
+    Projector,
+    ProjectorUnavailableError,
+    Source,
+)
 from epson_projector.const import (  # type: ignore[import]
     BACK,
-    BUSY_CODES,
-    CMODE,
-    CMODE_LIST,
     CMODE_LIST_SET,
-    DEFAULT_SOURCES,
-    EPSON_CODES,
     FAST,
-    INV_SOURCES,
     MUTE,
     PAUSE,
     PLAY,
-    POWER,
-    SOURCE,
-    SOURCE_LIST,
-    TURN_OFF,
-    TURN_ON,
-    VOL_DOWN,
-    VOL_UP,
-    VOLUME,
 )
 from homeassistant.components.media_player import (
     MediaPlayerDeviceClass,
@@ -45,6 +36,17 @@ if TYPE_CHECKING:
     from . import EpsonConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
+
+# Map Source enum values to friendly source names
+SOURCE_NAME_MAPPING = {
+    Source.HDMI1: "HDMI 1",
+    Source.HDMI2: "HDMI 2",
+    Source.LAN: "LAN",
+    Source.PC: "PC",
+    Source.USB: "USB",
+    Source.VIDEO: "Video",
+    Source.WFD: "WiFi Direct",
+}
 
 
 async def async_setup_entry(
@@ -87,7 +89,7 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
         self._entry = entry
         self._attr_available = False
         self._cmode = None
-        self._attr_source_list = list(DEFAULT_SOURCES.values())
+        self._attr_source_list = list(SOURCE_NAME_MAPPING.values())
         self._attr_unique_id = unique_id
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, unique_id)},
@@ -121,27 +123,36 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
     async def async_update(self) -> None:
         """Update state of device."""
         try:
-            power_state = await self._projector.get_power()
+            # power_state = await self._projector.get_power()
             new_power_state = await self._projector.power.get()
         except ProjectorUnavailableError as ex:
             _LOGGER.debug("Projector is unavailable: %s", ex)
             self._attr_available = False
             return
-        if not power_state:
+        # if not power_state:
+        if new_power_state is None:
             self._attr_available = False
             return
-        _LOGGER.debug("Projector status: %s, New power state: %s", power_state, new_power_state)
+        # _LOGGER.debug("Projector status: %s, New power state: %s", power_state, new_power_state)
+        _LOGGER.debug("Projector new power state: %s", new_power_state)
         self._attr_available = True
         # if power_state == EPSON_CODES[POWER]:
         if new_power_state == PowerStatus.NORMAL:
             self._attr_state = MediaPlayerState.ON
             if await self.set_unique_id():
+                _LOGGER.debug("Unique ID set for projector, returning from update: %s", self._attr_unique_id)
                 return
-            self._attr_source_list = list(DEFAULT_SOURCES.values())
-            cmode = await self._projector.get_property(CMODE)
-            self._cmode = CMODE_LIST.get(cmode, self._cmode) # type: ignore  # noqa: PGH003
-            source = await self._projector.get_property(SOURCE)
-            self._attr_source = SOURCE_LIST.get(source, self._attr_source) # type: ignore  # noqa: PGH003
+            # Why is this being set all the time? Once seems enough?
+            self._attr_source_list = list(SOURCE_NAME_MAPPING.values())
+
+            # cmode = await self._projector.get_property(CMODE)
+            # self._cmode = CMODE_LIST.get(cmode, self._cmode) # type: ignore  # noqa: PGH003
+
+            # source = await self._projector.get_property(SOURCE)
+            # self._attr_source = SOURCE_LIST.get(source, self._attr_source) # type: ignore  # noqa: PGH003
+            source = await self._projector.source.get()
+            self._attr_source = SOURCE_NAME_MAPPING.get(source) if source else None
+
             # if volume := await self._projector.get_property(VOLUME):
             #     try:
             #         _LOGGER.debug("Volume: %s, %s", volume, float(volume) / 255.0)
@@ -156,9 +167,11 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
                 except ValueError:
                     _LOGGER.debug("Volume value is not a number: %s", volume)
                     self._attr_volume_level = None
-        elif power_state in BUSY_CODES:
-            self._attr_state = MediaPlayerState.ON
-        else:
+        # elif power_state in BUSY_CODES:
+        #     self._attr_state = MediaPlayerState.ON
+        # else:
+        #     self._attr_state = MediaPlayerState.OFF
+        if new_power_state not in [PowerStatus.NORMAL, PowerStatus.WARMUP, PowerStatus.COOLDOWN]:
             self._attr_state = MediaPlayerState.OFF
 
     async def async_turn_on(self) -> None:
@@ -181,8 +194,11 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
 
     async def async_select_source(self, source: str) -> None:
         """Select input source."""
-        selected_source = INV_SOURCES[source]
-        await self._projector.send_command(selected_source)
+        # selected_source = INV_SOURCES[source]
+        # await self._projector.send_command(selected_source)
+        selected_source = [key for key, value in SOURCE_NAME_MAPPING.items() if value == source]
+        if selected_source:
+            await self._projector.source.set(selected_source[0])
 
     async def async_mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) sound."""
@@ -190,11 +206,13 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
 
     async def async_volume_up(self) -> None:
         """Increase volume."""
-        await self._projector.send_command(VOL_UP)
+        # await self._projector.send_command(VOL_UP)
+        await self._projector.volume.inc()
 
     async def async_volume_down(self) -> None:
         """Decrease volume."""
-        await self._projector.send_command(VOL_DOWN)
+        # await self._projector.send_command(VOL_DOWN)
+        await self._projector.volume.dec()
 
     async def async_set_volume_level(self, volume: float) -> None:
         """Set volume level, range 0..1."""
