@@ -1,7 +1,7 @@
 {
   "domain": "epson_test",
   "name": "Epson Test",
-  "codeowners": ["@pszafer"],
+  "codeowners": ["@mvdwetering"],
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/epson_test",
   "integration_type": "device",
