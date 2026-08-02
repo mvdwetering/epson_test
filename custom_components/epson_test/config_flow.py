@@ -36,6 +36,35 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
     MINOR_VERSION = 2
 
+    async def _async_validate_connection(
+        self, user_input: dict[str, Any], *, require_power_on: bool
+    ) -> dict[str, str]:
+        """Validate projector connection settings and return form errors."""
+        errors: dict[str, str] = {}
+        projector = None
+        try:
+            projector = await validate_projector(
+                hass=self.hass,
+                conn_type=user_input[CONF_CONNECTION_TYPE],
+                host=user_input[CONF_HOST],
+                port=user_input.get(CONF_PORT),
+                check_power=True,
+                check_powered_on=require_power_on,
+                password=user_input.get(CONF_PASSWORD),
+            )
+        except CannotConnect:
+            errors["base"] = "cannot_connect"
+        except PoweredOff:
+            _LOGGER.warning(
+                "You need to turn ON projector for initial configuration"
+            )
+            errors["base"] = "powered_off"
+        finally:
+            if projector:
+                projector.close()
+
+        return errors
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -43,37 +72,66 @@ class EpsonConfigFlow(ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             # Epson projector doesn't appear to need to be on for serial
-            check_power = False # user_input[CONF_CONNECTION_TYPE] != SERIAL
-            projector = None
-            try:
+            require_power_on = user_input[CONF_CONNECTION_TYPE] != SERIAL
+            errors = await self._async_validate_connection(
+                user_input, require_power_on=require_power_on
+            )
+
+            if not errors:
                 projector = await validate_projector(
                     hass=self.hass,
                     conn_type=user_input[CONF_CONNECTION_TYPE],
                     host=user_input[CONF_HOST],
                     port=user_input.get(CONF_PORT),
-                    check_power=True,
-                    check_powered_on=check_power,
+                    check_power=False,
+                    check_powered_on=False,
                     password=user_input.get(CONF_PASSWORD),
                 )
-            except CannotConnect:
-                errors["base"] = "cannot_connect"
-            except PoweredOff:
-                _LOGGER.warning(
-                    "You need to turn ON projector for initial configuration"
-                )
-                errors["base"] = "powered_off"
-            else:
-                serial_no = await projector.get_serial_number_alt()
-                await self.async_set_unique_id(serial_no)
-                self._abort_if_unique_id_configured()
-                return self.async_create_entry(
-                    title="Epson Projector", data=user_input
-                )
-            finally:
-                if projector:
+                try:
+                    serial_no = await projector.get_serial_number_alt()
+                    await self.async_set_unique_id(serial_no)
+                    self._abort_if_unique_id_configured()
+                    return self.async_create_entry(
+                        title="Epson Projector", data=user_input
+                    )
+                finally:
                     projector.close()
+
         return self.async_show_form(
             step_id="user",
             data_schema=self.add_suggested_values_to_schema(DATA_SCHEMA, user_input),
+            errors=errors,
+        )
+
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Reconfigure an existing entry."""
+        entry = self._get_reconfigure_entry()
+        if entry is None:
+            return self.async_abort(reason="unknown")
+
+        if user_input is not None:
+            errors = await self._async_validate_connection(
+                user_input=user_input,
+                require_power_on=False,
+            )
+            if not errors:
+                updated_data = {**entry.data, **user_input}
+                self.hass.config_entries.async_update_entry(
+                    entry,
+                    data=updated_data,
+                )
+                await self.hass.config_entries.async_reload(entry.entry_id)
+                return self.async_abort(reason="reconfigure_successful")
+        else:
+            errors = {}
+
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=self.add_suggested_values_to_schema(
+                DATA_SCHEMA,
+                user_input or dict(entry.data),
+            ),
             errors=errors,
         )
