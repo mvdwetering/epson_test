@@ -2,13 +2,19 @@
 
 Minimum required Home Assistant version is: 2026.7.0
 
+=== DO NOT USE THIS FOR A PRODUCTION SYSTEM! ===
+
 ## About
 
 This is a custom integration that lives next to the standard Home Assistant [EPSON integration](https://www.home-assistant.io/integrations/epson/). It's main purpose is to figure out what is needed to get LS11000 working and test out changes/concepts for the underlying epson-projector library.
 
 Disable the standard Epson entry if you want to connect to the same projector from the Epson Test integration.
 
-DO NOT USE THIS FOR A PRODUCTION SYSTEM!
+> When switching between normal and test integration make sure to restart Home Assistant. This is needed because the underlying library versions are not compatible and restarting will install correct version on enable. So the flow is like this.
+>
+> * Disable the active integration
+> * Restart Home Assistant
+> * Enable the integration
 
 Backward compatibility not guarenteed.
 
