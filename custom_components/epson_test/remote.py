@@ -116,6 +116,7 @@ class EpsonRemote(RemoteEntity):
             # epson_power = await self._projector.get_power()
             # self._power_state = epson_power == EPSON_CODES[POWER]
             self._power_state = await self._projector.power.get() == PowerStatus.NORMAL
+            self._attr_available = True
         except ProjectorUnavailableError as ex:
             _LOGGER.debug("Projector is unavailable: %s", ex)
             self._attr_available = False

@@ -129,10 +129,12 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
             _LOGGER.debug("Projector is unavailable: %s", ex)
             self._attr_available = False
             return
+
         # if not power_state:
         if new_power_state is None:
             self._attr_available = False
             return
+
         # _LOGGER.debug("Projector status: %s, New power state: %s", power_state, new_power_state)
         _LOGGER.debug("Projector new power state: %s", new_power_state)
         self._attr_available = True
@@ -173,6 +175,9 @@ class EpsonProjectorMediaPlayer(MediaPlayerEntity):
         #     self._attr_state = MediaPlayerState.OFF
         if new_power_state not in [PowerStatus.NORMAL, PowerStatus.WARMUP, PowerStatus.COOLDOWN]:
             self._attr_state = MediaPlayerState.OFF
+
+        self._attr_available = True
+
 
     async def async_turn_on(self) -> None:
         """Turn on epson."""
