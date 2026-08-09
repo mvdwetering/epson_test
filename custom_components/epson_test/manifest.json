@@ -3,7 +3,7 @@
   "name": "Epson Test",
   "codeowners": ["@mvdwetering"],
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/epson_test",
+  "documentation": "https://github.com/mvdwetering/epson_test",
   "integration_type": "device",
   "iot_class": "local_polling",
   "loggers": ["epson_projector"],
