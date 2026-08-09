@@ -60,7 +60,7 @@ List of things I built and findings while building it in chronological order.
 * When executing actions it always says it was succesful even when request is ignored by BUSY condition. This makes it impossible to have multiple actions in sequence. This was tested manually from automation editor.
 * Added Remote platform with `power_on`, `power_off`, `menu`, `up`, `down`, `left`, `right`, `enter`, `esc` commands. Use the new convenience command to avoid the 3 seconds BUSY
 * Disabled power on check
-* Added a reconfigure flow for easier testing of different interfaces. The implementation seems to change the `unique_id` to whatever the new projector is. This is convenient for switching between emulator and real device, but should be fixed in real version. Als the form is :/ but again, just quick PoC.
+* Added a reconfigure flow for easier testing of different interfaces. The implementation seems to change the `unique_id` to whatever the new projector is. This is convenient for switching between emulator and real device, but should be fixed in real version. Also the form is not great but again, just quick PoC.
 
 BIG TODOS:
 
